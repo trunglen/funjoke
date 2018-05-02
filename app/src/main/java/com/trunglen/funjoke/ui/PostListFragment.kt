@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.trunglen.funjoke.R
+import com.trunglen.funjoke.adapter.OnPostItemClickListener
 import com.trunglen.funjoke.adapter.PostRecyclerViewAdapter
 import com.trunglen.funjoke.model.Post
 import com.trunglen.funjoke.service.PostService
@@ -28,35 +29,39 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class PostListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     var page = 1
     lateinit var postAdapter: PostRecyclerViewAdapter
+    lateinit var catID: String
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-//        PostService(activity).listPosts(1).subscribe {
-//            //            val titles = it.map(Post::title) as ArrayList<String>
-//            val titles = it
-//            postAdapter = PostRecyclerViewAdapter(titles as ArrayList<Post>, activity)
-//            recyclerListPost.adapter = postAdapter
-//            swipe_refresh_layout.setOnRefreshListener {
-//                object : Runnable {
-//                    override fun run() {
-//
-//                    }
-//
-//                }
-//            }
-//        }
         // Inflate the layout for this fragment
-        postAdapter = PostRecyclerViewAdapter(ArrayList<Post>(), activity)
+        postAdapter = PostRecyclerViewAdapter(ArrayList<Post>(), object : OnPostItemClickListener {
+            override fun onItemClick(item: Post) {
+                val postDetailFragment = PostDetailFragment()
+                val bundle = Bundle()
+                bundle.putString("id", item.id)
+                bundle.putString("title", item.title)
+                bundle.putString("content", item.content)
+                postDetailFragment.arguments = bundle
+                fragmentManager.beginTransaction().replace(id, postDetailFragment).commit()
+                (activity as HomeActivity).nextFragment(postDetailFragment, false)
+            }
+
+        })
         return inflater.inflate(R.layout.fragment_post_list, container, false)
+//        View.OnClickListener {
+//            val postDetailFragment = PostDetailFragment()
+//            postDetailFragment.arguments.putString("title",)
+//            fragmentManager.beginTransaction().replace(id,PostDetailFragment()).commit()
+//        }
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        catID = arguments?.getString("cat_id") ?: ""
         recyclerListPost.adapter = postAdapter
         recyclerListPost.layoutManager = LinearLayoutManager(activity)
         recyclerListPost.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
@@ -65,8 +70,6 @@ class PostListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             swipe_refresh_layout.isRefreshing = true
             fetchPost()
         })
-//        recyclerListPost.layoutManager = LinearLayoutManager(activity)
-
         // You can use GridLayoutManager if you want multiple columns. Enter the number of columns as a parameter
     }
 
@@ -76,11 +79,10 @@ class PostListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun fetchPost() {
         swipe_refresh_layout.isRefreshing = true
-        PostService(activity).listPosts(page).subscribe {
+        PostService(activity).listPosts(catID, page).subscribe {
             val titles = it
-            Log.d("response_body", it.toString())
-            if (titles.size!=0) {
-                postAdapter = PostRecyclerViewAdapter(titles as ArrayList<Post>, activity)
+            if (titles.isNotEmpty()) {
+                postAdapter.items = titles as ArrayList<Post>
                 recyclerListPost.adapter = postAdapter
                 page++
             }

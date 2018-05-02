@@ -14,10 +14,10 @@ class PostService(context: Context) : BaseService(context) {
         postService = FunjokeApplication.funJokeHttpService.create(IPostService::class.java)
     }
 
-    fun listPosts(page: Int): Observable<List<Post>> {
-        return this.request(postService.listPosts(page)).map {
-//            if (it.data!=null) it.data else emptyList()
-            it.data?: emptyList()
+    fun listPosts(catID: String, page: Int): Observable<List<Post>> {
+        return this.request(postService.listPosts(catID, page)).map {
+            //            if (it.data!=null) it.data else emptyList()
+            it.data ?: emptyList()
         }
     }
 }

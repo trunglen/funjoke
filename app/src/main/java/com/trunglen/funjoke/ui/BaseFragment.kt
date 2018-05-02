@@ -1,4 +1,7 @@
 package com.trunglen.funjoke.ui
 
-class BaseFragment {
+import android.app.Fragment
+
+open class BaseFragment:Fragment() {
+
 }

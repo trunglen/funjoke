@@ -11,7 +11,7 @@ import retrofit2.http.Query
 
 interface IPostService {
     @GET("public/post/list")
-    fun listPosts(@Query("page") page: Int): Observable<Response<BaseModel<List<Post>>>>
+    fun listPosts(@Query("cat_id") catID: String, @Query("page") page: Int): Observable<Response<BaseModel<List<Post>>>>
 
     @GET("public/post/list")
     fun listPosts2(): Call<Response<List<Post>>>
