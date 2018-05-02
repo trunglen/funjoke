@@ -13,6 +13,7 @@ import com.trunglen.funjoke.R
 import com.trunglen.funjoke.model.Post
 import com.trunglen.funjoke.service.BaseService
 import com.trunglen.funjoke.service.IPostService
+import com.trunglen.funjoke.service.PostService
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 
@@ -27,9 +28,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
         nav_view.setNavigationItemSelectedListener(this)
-
+        addMenuItemInNavMenuDrawer()
 //        val postService = FunjokeApplication.funJokeHttpService.create(IPostService::class.java)
 //        postService.listPosts(1).enqueue(object: Callback<BaseModel<List<Post>>> {
 //            override fun onFailure(call: Call<BaseModel<List<Post>>>?, t: Throwable?) {
@@ -40,11 +40,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                Log.d("response_body", response?.body()?.data.toString())
 //            }
 //        })
-        postService = FunjokeApplication.funJokeHttpService.create(IPostService::class.java)
-        val postRequest = BaseService<List<Post>>(postService.listPosts(), this)
-        postRequest.request { res ->
-            Log.d("response_body", res?.toString())
-        }
+//        postService = FunjokeApplication.funJokeHttpService.create(IPostService::class.java)
+//        val postRequest = BaseService<List<Post>>(postService.listPosts(), this)
+//        postRequest.request { res ->
+//            Log.d("response_body", res?.toString())
+//        }
+
+
     }
 
     override fun onBackPressed() {
@@ -76,6 +78,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_camera -> {
                 // Handle the camera action
+                fragmentManager.beginTransaction().replace(R.id.viewHolder, PostListFragment()).commit()
             }
             R.id.nav_gallery -> {
 
@@ -96,5 +99,28 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun addMenuItemInNavMenuDrawer() {
+        val navView = nav_view
+        val menu = navView.menu
+        val submenu = menu.addSubMenu("New Super SubMenu")
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        navView.invalidate()
     }
 }

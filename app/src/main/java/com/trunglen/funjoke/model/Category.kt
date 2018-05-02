@@ -1,4 +1,6 @@
 package com.trunglen.funjoke.model
 
-class Category {
-}
+data class Category(
+        val id: String,
+        val name: String
+)

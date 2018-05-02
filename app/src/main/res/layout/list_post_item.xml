@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_list_row"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/padding_list_row"
+    android:paddingTop="@dimen/padding_list_row">
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/icon_star"
+        android:layout_width="@dimen/post_feature"
+        android:layout_height="@dimen/post_feature"
+        android:tint="@color/icon_tint_normal" />
+
+    <LinearLayout
+        android:id="@+id/message_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:lines="2"
+            android:textColor="@color/subject"
+            android:textSize="@dimen/msg_text_primary"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@color/message"
+            android:textSize="@dimen/msg_text_secondary"
+            />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
