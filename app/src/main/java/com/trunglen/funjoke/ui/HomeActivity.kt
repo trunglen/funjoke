@@ -5,24 +5,21 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import com.trunglen.funjoke.FunjokeApplication
 import com.trunglen.funjoke.R
-import com.trunglen.funjoke.model.Post
-import com.trunglen.funjoke.service.BaseService
-import com.trunglen.funjoke.service.IPostService
-import com.trunglen.funjoke.service.PostService
+import com.trunglen.funjoke.service.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    lateinit var categoryService: CategoryService
     lateinit var postService: IPostService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        categoryService = CategoryService(this)
         setSupportActionBar(toolbar)
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -45,7 +42,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        postRequest.request { res ->
 //            Log.d("response_body", res?.toString())
 //        }
-
 
     }
 
@@ -75,25 +71,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
+        val postFragment = PostListFragment()
+        val bundle = Bundle()
+        bundle.putString("cat",item.title.toString())
         when (item.itemId) {
             R.id.nav_camera -> {
                 // Handle the camera action
                 fragmentManager.beginTransaction().replace(R.id.viewHolder, PostListFragment()).commit()
-            }
-            R.id.nav_gallery -> {
-
-            }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
             }
         }
 
@@ -104,23 +88,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun addMenuItemInNavMenuDrawer() {
         val navView = nav_view
         val menu = navView.menu
-        val submenu = menu.addSubMenu("New Super SubMenu")
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
-        menu.add("Super Item1").setIcon( R.drawable.ic_menu_send)
+        categoryService.listCategories().subscribe {categories->
+            categories.forEach {cat->
+                menu.add(cat.name).setIcon(R.drawable.ic_menu_send)
+            }
+        }
         navView.invalidate()
     }
 }
