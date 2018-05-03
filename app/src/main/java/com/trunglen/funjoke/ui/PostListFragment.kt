@@ -18,23 +18,16 @@ import com.trunglen.funjoke.adapter.OnPostItemClickListener
 import com.trunglen.funjoke.adapter.PostRecyclerViewAdapter
 import com.trunglen.funjoke.model.Post
 import com.trunglen.funjoke.service.PostService
+import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.fragment_post_list.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
 class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     var page = 1
     lateinit var postAdapter: PostRecyclerViewAdapter
     lateinit var catID: String
+    lateinit var catTitle:String
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -49,8 +42,8 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 fragmentManager.beginTransaction().replace(id, postDetailFragment).commit()
                 (activity as HomeActivity).nextFragment(postDetailFragment, false)
             }
-
         })
+
         return inflater.inflate(R.layout.fragment_post_list, container, false)
 //        View.OnClickListener {
 //            val postDetailFragment = PostDetailFragment()
@@ -59,9 +52,11 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 //        }
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         catID = arguments?.getString("cat_id") ?: ""
+        catTitle = arguments?.getString("cat_title") ?: ""
+        setToolbar(catTitle)
         recyclerListPost.adapter = postAdapter
         recyclerListPost.layoutManager = LinearLayoutManager(activity)
         recyclerListPost.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
@@ -70,7 +65,13 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             swipe_refresh_layout.isRefreshing = true
             fetchPost()
         })
-        // You can use GridLayoutManager if you want multiple columns. Enter the number of columns as a parameter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("fragment_life","on_resume")
+        this.page = 1
+        fetchPost()
     }
 
     override fun onRefresh() {
@@ -89,5 +90,9 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             swipe_refresh_layout.isRefreshing = false
 //            postAdapter.notifyDataSetChanged()
         }
+    }
+
+    fun setToolbar(title:String) {
+        activity.toolbar.title = title
     }
 }

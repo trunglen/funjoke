@@ -59,6 +59,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val postFragment = PostListFragment()
         val bundle = Bundle()
         bundle.putString("cat_id", item.intent.extras.get("cat_id").toString())
+        bundle.putString("cat_title", item.title.toString())
         postFragment.arguments = bundle
         fragmentManager.beginTransaction().replace(R.id.viewHolder, postFragment).commit()
         skipFragment(postFragment)

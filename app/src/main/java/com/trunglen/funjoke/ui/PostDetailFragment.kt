@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 import com.trunglen.funjoke.R
 import com.trunglen.funjoke.common.STATIC_POST_URL
+import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.fragment_post_detail.*
 import kotlinx.android.synthetic.main.list_post_item.*
 
