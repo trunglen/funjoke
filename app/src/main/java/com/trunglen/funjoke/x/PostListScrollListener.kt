@@ -2,7 +2,7 @@ package com.trunglen.funjoke.x
 
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.LinearLayoutManager
-
+import android.util.Log
 
 
 abstract class PostListScrollListener:RecyclerView.OnScrollListener() {
@@ -18,14 +18,14 @@ abstract class PostListScrollListener:RecyclerView.OnScrollListener() {
         val visibleItemCount = recyclerView!!.childCount
         val totalItemCount = recyclerView.layoutManager.itemCount
         val firstVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-
+        Log.d("scroll","visibleItemCount ${visibleItemCount} totalItemCount ${totalItemCount} firstVisibleItem ${firstVisibleItem}")
         if (mLoading) {
             if (totalItemCount > mPreviousTotal) {
                 mLoading = false
                 mPreviousTotal = totalItemCount
             }
         }
-        val visibleThreshold = 5
+        val visibleThreshold = 4
         if (!mLoading && totalItemCount - visibleItemCount <= firstVisibleItem + visibleThreshold) {
             // End has been reached
 

@@ -29,10 +29,27 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     var page = 1
     lateinit var postAdapter: PostRecyclerViewAdapter
     lateinit var catID: String
-    lateinit var catTitle:String
+    lateinit var catTitle: String
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+        initAdapter()
+        return inflater.inflate(R.layout.fragment_post_list, container, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    fun initView() {
+        catID = arguments?.getString("cat_id") ?: ""
+        catTitle = arguments?.getString("cat_title") ?: ""
+        if (catTitle == "") catTitle = "Funjoke - Truyện cười hay nhất"
+        setToolbar(catTitle)
+        initRecyclerView()
+    }
+
+    fun initAdapter() {
         postAdapter = PostRecyclerViewAdapter(ArrayList<Post>(), object : OnPostItemClickListener {
             override fun onItemClick(item: Post) {
                 val bundle = Bundle()
@@ -45,27 +62,36 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 startActivity(intent)
             }
         })
-
-        return inflater.inflate(R.layout.fragment_post_list, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        catID = arguments?.getString("cat_id") ?: ""
-        catTitle = arguments?.getString("cat_title") ?: ""
-        if (catTitle=="") catTitle = "Funjoke - Truyện cười hay nhất"
-        setToolbar(catTitle)
+    fun initRecyclerView() {
         recyclerListPost.adapter = postAdapter
         recyclerListPost.layoutManager = LinearLayoutManager(activity)
         recyclerListPost.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
-        recyclerListPost.addOnScrollListener(object:PostListScrollListener(){
+        recyclerListPost.addOnScrollListener(object : PostListScrollListener() {
             override fun onLoadMore() {
-                Log.d("last_position","dasds")
+                Log.d("last_position", "load more")
                 fetchPost()
             }
-
         })
     }
+//    override fun onActivityCreated(savedInstanceState: Bundle?) {
+//        super.onActivityCreated(savedInstanceState)
+//        catID = arguments?.getString("cat_id") ?: ""
+//        catTitle = arguments?.getString("cat_title") ?: ""
+//        if (catTitle == "") catTitle = "Funjoke - Truyện cười hay nhất"
+//        setToolbar(catTitle)
+//        recyclerListPost.adapter = postAdapter
+//        recyclerListPost.layoutManager = LinearLayoutManager(activity)
+//        recyclerListPost.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+//        recyclerListPost.addOnScrollListener(object : PostListScrollListener() {
+//            override fun onLoadMore() {
+//                Log.d("last_position", "load more")
+//                fetchPost()
+//            }
+//
+//        })
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -89,7 +115,7 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    fun setToolbar(title:String) {
+    fun setToolbar(title: String) {
         activity.title = title
     }
 }
