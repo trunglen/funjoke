@@ -1,4 +1,4 @@
-package com.trunglen.funjoke.ui
+package com.trunglen.funjoke.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,8 @@ import android.view.Menu
 import android.view.MenuItem
 import com.trunglen.funjoke.R
 import com.trunglen.funjoke.service.*
+import com.trunglen.funjoke.ui.BaseActivity
+import com.trunglen.funjoke.ui.PostListFragment
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 
@@ -62,7 +64,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         bundle.putString("cat_title", item.title.toString())
         postFragment.arguments = bundle
         fragmentManager.beginTransaction().replace(R.id.viewHolder, postFragment).commit()
-        skipFragment(postFragment)
+        nextFragment(postFragment)
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -73,7 +75,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         categoryService.listCategories().subscribe { categories ->
             categories.forEach { cat ->
                 val catMenu = menu.add(cat.name)
-                        .setIcon(R.drawable.ic_menu_send)
+                        .setIcon(R.drawable.ic_joke_24dp)
                 val intent = Intent()
                 intent.putExtra("cat_id", cat.id)
                 catMenu.intent = intent
@@ -81,6 +83,4 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         navView.invalidate()
     }
-
-
 }

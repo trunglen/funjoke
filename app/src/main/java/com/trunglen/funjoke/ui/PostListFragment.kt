@@ -1,13 +1,12 @@
 package com.trunglen.funjoke.ui
 
 
-import android.app.Fragment
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +17,8 @@ import com.trunglen.funjoke.adapter.OnPostItemClickListener
 import com.trunglen.funjoke.adapter.PostRecyclerViewAdapter
 import com.trunglen.funjoke.model.Post
 import com.trunglen.funjoke.service.PostService
+import com.trunglen.funjoke.ui.activity.HomeActivity
+import com.trunglen.funjoke.ui.activity.PostDetailActivity
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.fragment_post_list.*
 
@@ -33,43 +34,43 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         // Inflate the layout for this fragment
         postAdapter = PostRecyclerViewAdapter(ArrayList<Post>(), object : OnPostItemClickListener {
             override fun onItemClick(item: Post) {
-                val postDetailFragment = PostDetailFragment()
                 val bundle = Bundle()
                 bundle.putString("id", item.id)
                 bundle.putString("title", item.title)
                 bundle.putString("content", item.content)
-                postDetailFragment.arguments = bundle
-                fragmentManager.beginTransaction().replace(id, postDetailFragment).commit()
-                (activity as HomeActivity).nextFragment(postDetailFragment, false)
+                bundle.putString("cat_title", catTitle)
+                val intent = Intent(activity, PostDetailActivity::class.java)
+                intent.putExtra("post_detail", bundle)
+                startActivity(intent)
             }
         })
 
         return inflater.inflate(R.layout.fragment_post_list, container, false)
-//        View.OnClickListener {
-//            val postDetailFragment = PostDetailFragment()
-//            postDetailFragment.arguments.putString("title",)
-//            fragmentManager.beginTransaction().replace(id,PostDetailFragment()).commit()
-//        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         catID = arguments?.getString("cat_id") ?: ""
         catTitle = arguments?.getString("cat_title") ?: ""
+        if (catTitle=="") catTitle = "Funjoke - Truyện cười hay nhất"
         setToolbar(catTitle)
         recyclerListPost.adapter = postAdapter
         recyclerListPost.layoutManager = LinearLayoutManager(activity)
         recyclerListPost.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
-        swipe_refresh_layout.setOnRefreshListener(this)
-        swipe_refresh_layout.post(Runnable {
-            swipe_refresh_layout.isRefreshing = true
-            fetchPost()
+        recyclerListPost.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+            }
         })
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("fragment_life","on_resume")
         this.page = 1
         fetchPost()
     }
@@ -79,7 +80,6 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchPost() {
-        swipe_refresh_layout.isRefreshing = true
         PostService(activity).listPosts(catID, page).subscribe {
             val titles = it
             if (titles.isNotEmpty()) {
@@ -87,12 +87,11 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 recyclerListPost.adapter = postAdapter
                 page++
             }
-            swipe_refresh_layout.isRefreshing = false
 //            postAdapter.notifyDataSetChanged()
         }
     }
 
     fun setToolbar(title:String) {
-        activity.toolbar.title = title
+        activity.title = title
     }
 }

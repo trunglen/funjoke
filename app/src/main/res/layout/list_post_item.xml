@@ -6,20 +6,21 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/padding_list_row"
-    android:paddingTop="@dimen/padding_list_row">
+    android:padding="@dimen/margin_smallxx">
 
     <ImageView
         android:id="@+id/icon_star"
         android:layout_width="@dimen/post_feature"
         android:layout_height="@dimen/post_feature"
-        android:tint="@color/icon_tint_normal" />
+        android:tint="@color/icon_tint_normal"
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:id="@+id/message_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/margin_smallxx">
 
         <TextView
             android:id="@+id/tvTitle"
