@@ -19,6 +19,7 @@ import com.trunglen.funjoke.model.Post
 import com.trunglen.funjoke.service.PostService
 import com.trunglen.funjoke.ui.activity.HomeActivity
 import com.trunglen.funjoke.ui.activity.PostDetailActivity
+import com.trunglen.funjoke.x.PostListScrollListener
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.fragment_post_list.*
 
@@ -57,15 +58,12 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         recyclerListPost.adapter = postAdapter
         recyclerListPost.layoutManager = LinearLayoutManager(activity)
         recyclerListPost.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
-        recyclerListPost.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
+        recyclerListPost.addOnScrollListener(object:PostListScrollListener(){
+            override fun onLoadMore() {
+                Log.d("last_position","dasds")
+                fetchPost()
             }
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-            }
         })
     }
 
