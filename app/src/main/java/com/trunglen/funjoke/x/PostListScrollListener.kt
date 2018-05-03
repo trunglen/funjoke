@@ -18,7 +18,6 @@ abstract class PostListScrollListener:RecyclerView.OnScrollListener() {
         val visibleItemCount = recyclerView!!.childCount
         val totalItemCount = recyclerView.layoutManager.itemCount
         val firstVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-        Log.d("scroll","visibleItemCount ${visibleItemCount} totalItemCount ${totalItemCount} firstVisibleItem ${firstVisibleItem}")
         if (mLoading) {
             if (totalItemCount > mPreviousTotal) {
                 mLoading = false

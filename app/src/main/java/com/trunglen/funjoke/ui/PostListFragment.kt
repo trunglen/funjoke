@@ -6,21 +6,17 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.trunglen.funjoke.R
 import com.trunglen.funjoke.adapter.OnPostItemClickListener
 import com.trunglen.funjoke.adapter.PostRecyclerViewAdapter
 import com.trunglen.funjoke.model.Post
 import com.trunglen.funjoke.service.PostService
-import com.trunglen.funjoke.ui.activity.HomeActivity
 import com.trunglen.funjoke.ui.activity.PostDetailActivity
 import com.trunglen.funjoke.x.PostListScrollListener
-import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.fragment_post_list.*
 
 class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
@@ -47,6 +43,7 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         if (catTitle == "") catTitle = "Funjoke - Truyện cười hay nhất"
         setToolbar(catTitle)
         initRecyclerView()
+        (activity as BaseActivity).requestAds()
     }
 
     fun initAdapter() {
@@ -75,23 +72,6 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
     }
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
-//        super.onActivityCreated(savedInstanceState)
-//        catID = arguments?.getString("cat_id") ?: ""
-//        catTitle = arguments?.getString("cat_title") ?: ""
-//        if (catTitle == "") catTitle = "Funjoke - Truyện cười hay nhất"
-//        setToolbar(catTitle)
-//        recyclerListPost.adapter = postAdapter
-//        recyclerListPost.layoutManager = LinearLayoutManager(activity)
-//        recyclerListPost.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
-//        recyclerListPost.addOnScrollListener(object : PostListScrollListener() {
-//            override fun onLoadMore() {
-//                Log.d("last_position", "load more")
-//                fetchPost()
-//            }
-//
-//        })
-//    }
 
     override fun onResume() {
         super.onResume()
@@ -104,13 +84,15 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchPost() {
+        pbLoading.visibility = View.VISIBLE
         PostService(activity).listPosts(catID, page).subscribe {
             val titles = it
             if (titles.isNotEmpty()) {
-                postAdapter.items = titles as ArrayList<Post>
-                recyclerListPost.adapter = postAdapter
+                postAdapter.items.addAll(titles as ArrayList<Post>)
+                postAdapter.notifyDataSetChanged()
                 page++
             }
+            pbLoading.visibility = View.GONE
 //            postAdapter.notifyDataSetChanged()
         }
     }

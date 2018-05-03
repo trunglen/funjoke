@@ -3,9 +3,14 @@ package com.trunglen.funjoke.ui
 import android.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import com.google.android.gms.ads.AdRequest
 import com.trunglen.funjoke.R
 import kotlinx.android.synthetic.main.app_bar_home.*
 import java.util.*
+import com.google.android.gms.ads.AdView
+
+
 
 open class BaseActivity() : AppCompatActivity() {
     val stackFragment = Stack<Fragment>()
@@ -30,5 +35,11 @@ open class BaseActivity() : AppCompatActivity() {
 
     fun setToolbarTitle(title:String){
         setSupportActionBar(toolbar)
+    }
+
+    fun requestAds() {
+        val banner = findViewById<View>(R.id.banner) as AdView
+        val adRequest = AdRequest.Builder().build()
+        banner.loadAd(adRequest)
     }
 }
