@@ -71,12 +71,13 @@ class PostListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 fetchPost()
             }
         })
+        fetchPost()
     }
 
     override fun onResume() {
         super.onResume()
-        this.page = 1
-        fetchPost()
+//        this.page = 1
+//        fetchPost()
     }
 
     override fun onRefresh() {
